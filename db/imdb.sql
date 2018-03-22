@@ -12,7 +12,8 @@ CREATE TABLE movies (
   id SERIAL4 PRIMARY KEY,
   title VARCHAR(255),
   genre VARCHAR(255),
-  rating INT
+  rating INT,
+  budget INT
 );
 
 CREATE TABLE castings (

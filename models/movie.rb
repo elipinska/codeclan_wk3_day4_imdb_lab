@@ -1,7 +1,7 @@
 require_relative("../db/sql_runner")
 
 class Movie
-  attr_accessor :title, :genre, :rating
+  attr_accessor :title, :genre, :rating, :budget
   attr_reader :id
 
   def initialize(options)
@@ -9,15 +9,16 @@ class Movie
     @title = options['title']
     @genre = options['genre']
     @rating = options['rating']
+    @budget = options['budget'].to_i if options['budget']
   end
 
   def save()
     sql = "INSERT INTO movies
-            (title, genre, rating)
+            (title, genre, rating, budget)
             VALUES
-            ($1, $2, $3)
+            ($1, $2, $3, $4)
             RETURNING id"
-    values = [@title, @genre, @rating]
+    values = [@title, @genre, @rating, @budget]
 
     result = SqlRunner.run(sql, values)
     @id = result[0]['id']
@@ -35,9 +36,9 @@ class Movie
 
   def update()
     sql = "UPDATE movies
-           SET(title, genre, rating) = ($1, $2, $3)
-           WHERE id = $4"
-    values = [@title, @genre, @rating, @id]
+           SET(title, genre, rating, budget) = ($1, $2, $3, $4)
+           WHERE id = $5"
+    values = [@title, @genre, @rating, @budget, @id]
     SqlRunner.run(sql, values)
   end
 
@@ -60,8 +61,18 @@ class Movie
     WHERE castings.movie_id = $1;"
     values = [@id]
     result = SqlRunner.run(sql, values)
-    return Star.map_items(result)  
+    return Star.map_items(result)
   end
 
+  #Add a budget to your movie model and create a method that will return the remaining budget once all a movie's star's fees have been taken into consideration!
+  def remaining_budget()
+    sql = "SELECT fee FROM castings
+           WHERE movie_id = $1;"
+    values = [@id]
+    result = SqlRunner.run(sql, values)
+    fees_array = result.map {|casting| Casting.new(casting).fees}
+    fees = fees_array.inject(0){|sum, x| sum + x.to_i }
+    return @budget - fees
+  end
 
 end

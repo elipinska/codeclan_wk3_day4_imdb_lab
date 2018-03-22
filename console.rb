@@ -8,7 +8,7 @@ star_options_hash1 = {'first_name'=>'Taka', 'last_name'=>'Waititi'}
 star1 = Star.new(star_options_hash1)
 star1.save()
 
-movies_options_hash1 = {'title'=>'Hunt for Wilderpeople', 'genre'=>'comedy', 'rating'=>8}
+movies_options_hash1 = {'title'=>'Hunt for Wilderpeople', 'genre'=>'comedy', 'rating'=>8, 'budget'=>'100000'}
 
 movie1 = Movie.new(movies_options_hash1)
 movie1.save()
@@ -51,7 +51,7 @@ star2 = Star.new(star_options_hash2)
 star2.save()
 #
 # # movie1.save()
-movies_options_hash2 = {'title'=>'Thor Ragnarok', 'genre'=>'action', 'rating'=>8}
+movies_options_hash2 = {'title'=>'Thor Ragnarok', 'genre'=>'action', 'rating'=>8, 'budget'=>'100000'}
 
 movie2 = Movie.new(movies_options_hash2)
 movie2.save()
@@ -106,3 +106,8 @@ p star1.all_movies()
 # Casting.delete_all()
 # p Casting.all()
 # puts ""
+puts ""
+puts "Remaining budget for Thor"
+p movie2.remaining_budget()
+
+p movie1.remaining_budget()
